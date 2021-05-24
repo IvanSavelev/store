@@ -1,0 +1,73 @@
+version: "3.7"
+
+services:
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.17-alpine
+    restart: unless-stopped
+    volumes:
+      - .:/var/www
+      - ./docker/store-admin.conf:/etc/nginx/conf.d/store-admin.conf:ro
+    depends_on:
+      - laravel
+      - mysql
+      - symfony
+    ports:
+      - 80:80
+    networks:
+      - network
+
+  laravel:
+    container_name: laravel
+    working_dir: /var/www/admin
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - mysql
+    volumes:
+      - ./admin:/var/www/admin
+      - ./docker/back.sh:/back.sh
+    entrypoint: /back.sh
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: laravel-1
+    networks:
+      - network
+
+  symfony:
+    container_name: symfony
+    working_dir: /var/www/front
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: /back.sh
+    volumes:
+      - ./front/:/var/www/front
+      - ./back.sh:/back.sh
+    networks:
+      - network
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: laravel-1
+    ports:
+      - 3306:3306
+    volumes:
+      - box-mysql:/var/lib/mysql
+    networks:
+      - network
+
+volumes:
+  box-mysql:
+networks:
+  network:

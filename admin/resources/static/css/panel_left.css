@@ -1,0 +1,24 @@
+div.sidebar.toggled> ul.sidebar.toggled {
+    width: 100%!important;
+}
+.navbar-nav .show-component {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.navbar-nav a:hover {
+    color: #224abe;
+    text-decoration: none;
+}
+.navbar-nav {
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
